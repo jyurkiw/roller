@@ -10,4 +10,6 @@ requires-python = ">=3.8"
 
 [tool.maturin]
 # Build a pure Rust extension (no mixed Python/Rust source tree)
-features = ["pyo3/extension-module"]
+features = ["extension-module"]
+# Bundle the generated type stub so IDEs get autocompletion
+include = [{ path = "roller.pyi", format = "wheel" }]

@@ -682,9 +682,11 @@ mod tests {
 mod python {
     use pyo3::prelude::*;
     use pyo3::exceptions::PyValueError;
+    use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
     use super::*;
 
     /// A single dice-group result exposed to Python.
+    #[gen_stub_pyclass]
     #[pyclass(name = "RollEntry")]
     #[derive(Clone)]
     pub struct PyRollEntry {
@@ -692,6 +694,14 @@ mod python {
         pub label: String,
         #[pyo3(get)]
         pub details: Vec<i64>,
+    }
+
+    #[gen_stub_pymethods]
+    #[pymethods]
+    impl PyRollEntry {
+        fn __repr__(&self) -> String {
+            format!("RollEntry(label={:?}, details={:?})", self.label, self.details)
+        }
     }
 
     /// Python-facing dice roller.
@@ -703,11 +713,13 @@ mod python {
     /// >>> r.rolls          # list[RollEntry]
     /// >>> r.code           # str
     /// >>> r.reroll()       # re-evaluate with fresh randomness
+    #[gen_stub_pyclass]
     #[pyclass(name = "Roll")]
     pub struct PyRoll {
         inner: Roll,
     }
 
+    #[gen_stub_pymethods]
     #[pymethods]
     impl PyRoll {
         #[new]
@@ -774,3 +786,8 @@ mod python {
         Ok(())
     }
 }
+
+// =========================================================================
+//  Stub info gatherer (used by `cargo run --bin stub_gen`)
+// =========================================================================
+pyo3_stub_gen::define_stub_info_gatherer!(stub_info);
