@@ -699,6 +699,11 @@ mod python {
     #[gen_stub_pymethods]
     #[pymethods]
     impl PyRollEntry {
+        #[new]
+        fn new(label: String, details: Vec<i64>) -> Self {
+            PyRollEntry { label, details }
+        }
+
         fn __repr__(&self) -> String {
             format!("RollEntry(label={:?}, details={:?})", self.label, self.details)
         }
